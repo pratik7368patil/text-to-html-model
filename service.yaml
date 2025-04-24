@@ -15,3 +15,8 @@ spec:
         - image: us-central1-docker.pkg.dev/ai-customizer-457411/text-to-html-reg/layout-transformer@sha256:d0b9b0f1a8e6f70da4a08c28c71853d6d5bd1b61c5d7cc0ab3df37c0c88291e7
           ports:
             - containerPort: 8081
+          resources:
+            requests:
+              memory: "2Gi"
+            limits:
+              memory: "2Gi"
