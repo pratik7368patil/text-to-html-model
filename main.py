@@ -5,6 +5,7 @@ import re
 import numpy as np
 from lxml import html as lxml_html
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import tensorflow as tf
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -118,6 +119,15 @@ def greedy_decode(prompt: str, penalty: float = 1.2) -> str:
         return raw_html
 
 app = FastAPI(title="Layout generation", version="1.0")
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 class GenerateRequest(BaseModel):
     prompt: str
