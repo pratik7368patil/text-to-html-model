@@ -11,6 +11,7 @@ spec:
         autoscaling.knative.dev/minScale: "1"
         autoscaling.knative.dev/maxScale: "5"
     spec:
+      timeoutSeconds: 300
       containers:
         - image: us-central1-docker.pkg.dev/ai-customizer-457411/text-to-html-reg/layout-transformer@sha256:d0b9b0f1a8e6f70da4a08c28c71853d6d5bd1b61c5d7cc0ab3df37c0c88291e7
           ports:
@@ -20,3 +21,16 @@ spec:
               memory: "2Gi"
             limits:
               memory: "2Gi"
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 3
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5

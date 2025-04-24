@@ -72,9 +72,22 @@ def generate_html(columns: int, rows: int) -> str:
 
 
 def parse_layout_prompt(prompt: str):
-    match = re.search(r"(\d+)\s*columns?[\s,]*(\d+)\s*rows?", prompt, flags=re.IGNORECASE)
-    if match:
-        return int(match.group(1)), int(match.group(2))
+    matches = re.findall(r"(\d+)\s*(columns?|rows?)", prompt, flags=re.IGNORECASE)
+    dims = {}
+    for value, label in matches:
+        label_l = label.lower()
+        if 'column' in label_l:
+            dims['cols'] = int(value)
+        elif 'row' in label_l:
+            dims['rows'] = int(value)
+    if 'cols' in dims and 'rows' in dims:
+        return dims['cols'], dims['rows']
+
+    m = re.search(r"(\d+)\s*[x×]\s*(\d+)", prompt, flags=re.IGNORECASE)
+    if m:
+        cols, rows = int(m.group(1)), int(m.group(2))
+        return cols, rows
+
     return None
 
 def greedy_decode(prompt: str, penalty: float = 1.2) -> str:
